@@ -1,19 +1,24 @@
-import React from 'react'
-import Sidebar from './components/Sidebar'
-import Player from './components/Player'
-import Display from './components/Display'
-
+import React, { useContext } from 'react'; // Added useContext here
+import Sidebar from './components/Sidebar';
+import Player from './components/Player';
+import Display from './components/Display';
+import { PlayerContext } from './context/PlayerContext';
 
 const App = () => {
+
+  const { audioRef, track } = useContext(PlayerContext);
+  
   return (
     <div className='h-screen w-screen bg-black text-white'>
       <div className='h-[90%] flex'>
         <Sidebar />
+        <Display />
       </div>
       <Player />
-      <Display />
+      {/* The ref here is now correctly connected to your global state */}
+      <audio ref={audioRef} src={track.file} preload='auto'></audio>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

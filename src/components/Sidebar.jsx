@@ -1,7 +1,10 @@
 import React from 'react';
 import { assets } from '../assets/assets';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
+   const navigate = useNavigate();
+
   return (
     // 'h-full' ensures the sidebar takes the available height
     // 'hidden lg:flex' hides it on small screens and shows on large screens
@@ -9,7 +12,7 @@ const Sidebar = () => {
       
       {/* 1. Navigation Section (Fixed height) */}
       <div className='bg-[#121212] h-[15%] rounded flex flex-col justify-around p-4'>
-        <div className='flex items-center gap-3 pl-4 cursor-pointer hover:text-white transition'>
+        <div onClick={() =>navigate('/')} className='flex items-center gap-3 pl-4 cursor-pointer hover:text-white transition'>
           <img className='w-6' src={assets.home_icon} alt="Home" />
           <p className='font-bold'>Home</p>
         </div>
@@ -33,16 +36,16 @@ const Sidebar = () => {
         </div>
         <div className='p-4 bg-[#242424] m-2 rounded font-black flex flex-col justify-start items-start gap-1 pl-4' >
             <h1>Create your first playlist</h1>
-            <p className='font-light'> It's easy, just click the "+" button and start adding songs!</p>
+            <p className='text-gray-300 font-light'> It's easy, just click the "+" button and start adding songs!</p>
             <button className='bg-white text-black font-bold py-2 px-4 rounded-full hover:bg-gray-300 cursor-pointer transition'>
               Create Playlist
             </button>
         </div>
 
         <div className='p-4 bg-[#242424] m-2 rounded font-black flex flex-col justify-start items-start gap-1 pl-4 mt-4' >
-            <h1>Let's find some podcasts to follow</h1>
-            <p className='font-light'>We'll keep you updated with the latest episodes!</p>
-            <button className='bg-white text-black font-bold py-2 px-4 rounded-full hover:bg-gray-300 cursor-pointer transition'>
+            <h1 className=' font-bold'>Let's find some podcasts to follow</h1>
+            <p className='text-sm font-light'>We'll keep you updated with the latest episodes!</p>
+            <button className='bg-white  text-black font-bold py-2 px-4 rounded-full hover:bg-gray-300 cursor-pointer transition'>
               Browse Podcasts
             </button>
         </div>
