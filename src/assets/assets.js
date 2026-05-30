@@ -42,6 +42,7 @@ import img16 from './img16.jpg'
 import song1 from  './song1.mp3'
 import song2 from  './song2.mp3'
 import song3 from  './song3.mp3'
+import bg_video from './bg_video.mp4'
 
 export const assets = {
     bell_icon,
@@ -68,7 +69,8 @@ export const assets = {
     arrow_right,
     spotify_logo,
     audiom_logo,
-    clock_icon
+    clock_icon,
+    bg_video
 }
 
 export const albumsData = [
