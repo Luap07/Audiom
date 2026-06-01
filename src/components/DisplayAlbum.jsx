@@ -1,62 +1,86 @@
-import React, { useContext } from 'react'; // Fix: Added useContext here
-import Navbar from './Navbar';
-import { useParams } from 'react-router-dom';
-import { albumsData, songsData, assets } from '../assets/assets';
-import { PlayerContext } from '../context/PlayerContext';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const DisplayAlbum = () => {
-    const { id } = useParams();
-    const albumData = albumsData[id];
-    
-    // Now that useContext is imported, this will access the provider correctly
-    const { playWithId } = useContext(PlayerContext);
+  const { id } = useParams();
+  const [album, setAlbum] = useState(null);
+  const [tracks, setTracks] = useState([]);
 
-    return (
+  useEffect(() => {
+    const fetchAlbum = async () => {
+      try {
+        // 1. Get token from your backend
+        const tokenRes = await fetch("http://localhost:5000/api/token");
+        const tokenData = await tokenRes.json();
+
+        // 2. Get album info
+        const albumRes = await fetch(
+          `https://api.spotify.com/v1/albums/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${tokenData.access_token}`,
+            },
+          }
+        );
+
+        const albumData = await albumRes.json();
+
+        setAlbum(albumData);
+        setTracks(albumData.tracks.items);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchAlbum();
+  }, [id]);
+
+  if (!album) {
+    return <p className="text-white p-4">Loading album...</p>;
+  }
+
+  return (
+    <div className="text-white p-6">
+      {/* Album Info */}
+      <div className="flex gap-5 items-end">
+        <img
+          src={album.images[0]?.url}
+          alt={album.name}
+          className="w-48 h-48 object-cover rounded"
+        />
+
         <div>
-            <Navbar />
-            <div className='mt-10 flex gap-8 flex-col md:flex-row md:items-end'>
-                <img className='w-48 rounded' src={albumData.image} alt='' />
-                <div className='flex flex-col'>
-                    <p>Playlist</p>
-                    <h2 className='text-5xl font-bold mb-4 md:text-7xl'>{albumData.name}</h2>
-                    <h4>{albumData.desc}</h4>
-                    <div className='mt-3 flex items-center gap-2'>
-                        <img className='w-8 h-8 rounded-full' src={assets.audiom_logo} alt='Audiom Logo' />
-                        <b className='font-bold'>Audiom</b>
-                        <span>• 134,405 likes</span>
-                        <b>• 10 songs,</b>
-                        <span>about 2 hr 35 min</span>
-                    </div>
-                </div>
-            </div>
-
-            <div className='grid grid-cols-3 sm:grid-cols-4 mt-10 mb-4 pl-2 text-[#a7a7a7]'>
-                <p><b className='mr-4'>#</b>Title</p>
-                <p>Album</p>
-                <p className='hidden sm:block'>Date Added</p>
-                <img className='m-auto w-4' src={assets.clock_icon} alt='Clock' />
-            </div>
-            <hr />
-            {
-                songsData.map((item, index) => (
-                    <div 
-                        onClick={() => playWithId(item.id)} 
-                        key={index} 
-                        className='grid grid-cols-3 sm:grid-cols-4 gap-4 pl-2 py-2 items-center text-[#7a7a7a] hover:bg-[#ffffff26] cursor-pointer'
-                    >
-                       <p className='text-white'>
-                        <b className='text-[#a7a7a7] mr-4'>{index + 1}</b>
-                        <img className='inline w-10 mr-5' src={item.image} alt='' />
-                        {item.name}
-                        </p>
-                        <p className='text-[15px]'>{albumData.name}</p>
-                        <p className='text-[15px] hidden sm:block'>5 days ago</p>
-                        <p className='text-[15px] text-center'>{item.duration}</p>
-                    </div>
-                ))
-            }
+          <p className="text-sm text-gray-300">ALBUM</p>
+          <h1 className="text-3xl font-bold">{album.name}</h1>
+          <p className="text-gray-400 mt-2">
+            {album.artists.map((a) => a.name).join(", ")}
+          </p>
         </div>
-    );
+      </div>
+
+      {/* Tracks */}
+      <div className="mt-8">
+        {tracks.map((track, index) => (
+          <div
+            key={track.id}
+            className="flex justify-between py-2 border-b border-gray-700"
+          >
+            <p>
+              {index + 1}. {track.name}
+            </p>
+
+            <p className="text-gray-400">
+              {Math.floor(track.duration_ms / 60000)}:
+              {String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(
+                2,
+                "0"
+              )}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default DisplayAlbum;
