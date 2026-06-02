@@ -44,7 +44,7 @@ const PlayerContextProvider = ({ children }) => {
     isPlaying ? pause() : play();
   };
 
-  // 🎵 LOAD TRACK (ONLY AUDIO CONTROL POINT)
+  // 🎵 LOAD TRACK
   const loadTrack = (index, autoPlay = true) => {
     const safeIndex = (index + songsData.length) % songsData.length;
     const newTrack = songsData[safeIndex];
@@ -63,7 +63,7 @@ const PlayerContextProvider = ({ children }) => {
         audio
           .play()
           .then(() => setIsPlaying(true))
-          .catch((err) => console.log("Play blocked:", err));
+          .catch(() => {});
       }
     }, 0);
   };
@@ -104,7 +104,7 @@ const PlayerContextProvider = ({ children }) => {
     }
   }, [volume]);
 
-  // ⏱ TIME UPDATE (progress + timer)
+  // ⏱ TIME UPDATE
   const onPlaying = () => {
     const audio = audioRef.current;
     if (!audio || !audio.duration) return;
