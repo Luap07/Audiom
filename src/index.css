@@ -1,0 +1,23 @@
+/* font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* style */
+@import "tailwindcss";
+
+/* Ensure root is scrollable */
+html, body, #root {
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto; /* This enables scrolling */
+  margin: 0;
+  padding: 0;
+}
+
+/* Optional: Keep scrollbar invisible but still allow scrolling */
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
